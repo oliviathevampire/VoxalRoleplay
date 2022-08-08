@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'uk.co.phoenixfirewingz'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.lwjgl:lwjgl:3.3.1'
+    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
+    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
+    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
+    implementation 'org.lwjgl:lwjgl-stb:3.3.1'
+    implementation 'com.google.code.gson:gson:2.9.1'
+    implementation 'org.slf4j:slf4j-log4j12:2.0.0-beta1'
+    implementation 'org.slf4j:slf4j-api:2.0.0-beta1'
+    implementation 'log4j:log4j:1.2.17'
+    implementation 'net.sourceforge.argparse4j:argparse4j:0.9.0'
+}
+
+task serverFatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'VoxelRoleplay Server Jar',
+                'Implementation-Version': version,
+                'Main-Class': 'uk.co.phoenixfirewingz.server.core.Main'
+    }
+    baseName = project.name + '-Server'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
+
+task clientFatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'VoxelRoleplay Client Jar',
+                'Implementation-Version': version,
+                'Main-Class': 'uk.co.phoenixfirewingz.client.core.Main'
+    }
+    baseName = project.name + '-Client'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
