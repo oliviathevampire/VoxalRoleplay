@@ -31,6 +31,9 @@ task serverFatJar(type: Jar) {
     }
     baseName = project.name + '-Server'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    processResources {
+        exclude('ResourcePack/client.zip')
+    }
     from {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
@@ -45,6 +48,9 @@ task clientFatJar(type: Jar) {
     }
     baseName = project.name + '-Client'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    processResources {
+        exclude('ResourcePack/default.zip')
+    }
     from {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }

@@ -3,8 +3,8 @@ package uk.co.phoenixfirewingz.client.core;
 import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.co.phoenixfirewingz.client.core.Net.Client;
-import uk.co.phoenixfirewingz.client.core.Renderer.GameRenderer;
+import uk.co.phoenixfirewingz.client.core.net.Client;
+import uk.co.phoenixfirewingz.client.core.renderer.GameRenderer;
 import uk.co.phoenixfirewingz.share.game.Block;
 import uk.co.phoenixfirewingz.share.game.Entity;
 import uk.co.phoenixfirewingz.share.game.Item;
@@ -25,7 +25,7 @@ public class Main {
         BasicConfigurator.configure();
         render_thread = new GameRenderer();
         render_thread.start();
-        new Thread(new Client()).start();
+        //new Thread(new Client()).start();
         while (!getRenderer().getWindow().shouldClose()) {}
     }
 

@@ -46,11 +46,17 @@ public class ResourcePackLoader {
     public ResourcePackLoader() {}
 
     private static int find(String path, List<Entry> files) {
+        GameServer.getLOGGER().info("Path: " + path);
+        GameServer.getLOGGER().info("finding...");
         int i = 0;
         for (Entry e : files) {
-            if(e.getKey().equals(path)) return i;
+            if(e.getKey().equals(path)) {
+                GameServer.getLOGGER().info("found");
+                return i;
+            }
             i++;
         }
+        GameServer.getLOGGER().info("not found");
         return -1;
     }
 
@@ -67,7 +73,7 @@ public class ResourcePackLoader {
                     registry.register(path.getOne(), gson.fromJson(stream, (Type) aClass));
                     stream.close();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    GameServer.getLOGGER().error(e.getMessage());
                 }
             }
         });
@@ -117,10 +123,13 @@ public class ResourcePackLoader {
                 server
             );
             zipFile.close();
-        } catch (IOException e) {
-            GameServer.getLOGGER().trace(e.getMessage());
+        } catch (Exception e) {
+            GameServer.getLOGGER().error(e.getMessage());
+            GameServer.getLOGGER().error("the assets pack is malformed so the server will not load it");
+            System.exit(-1);
         }
     }
 
-    private record LoadEntry<T extends BaseContent>(Entry entry, Class<T> aClass, Registry<T> registry) {}
+    private record LoadEntry<T extends BaseContent>(Entry entry, Class<T> aClass, Registry<T> registry) {
+    }
 }
