@@ -20,9 +20,6 @@ import static uk.co.phoenixfirewingz.share.util.Linker.link;
 public class GameServer {
     ServerSocket socket;
     static Logger LOGGER = LoggerFactory.getLogger("VoxelRoleplayServer");
-    public Registry<Block> blockRegistry = Registries.BLOCK;
-    public Registry<Item> itemRegistry = Registries.ITEM;
-    public Registry<Entity> entityRegistry = Registries.ENTITY;
     public static Thread world;
 
     //TODO: make server controllable from args
@@ -81,9 +78,7 @@ public class GameServer {
     }
 
     public void clearReg() {
-        blockRegistry.clear();
-        itemRegistry.clear();
-        entityRegistry.clear();
+        Registries.REGISTRIES.getEntries().forEach(Registry::clear);
     }
 
     public static Logger getLOGGER() {

@@ -1,17 +1,21 @@
 package uk.co.phoenixfirewingz.share.game;
 
-import java.io.Serializable;
 import java.util.Vector;
 
-public class Registry<T extends BaseContent> implements Serializable {
+public class Registry<T extends RegistryEntry> extends RegistryEntry {
 
     Vector<T> entries = new Vector<>();
 
     public Registry() {}
 
-    public void add(String lua_identifier, T entry) {
+    public T register(String lua_identifier, T entry) {
         entry.setLuaIdentifier(lua_identifier);
         entries.add(entry);
+        return entry;
+    }
+
+    public Vector<T> getEntries() {
+        return entries;
     }
 
     public void clear() {

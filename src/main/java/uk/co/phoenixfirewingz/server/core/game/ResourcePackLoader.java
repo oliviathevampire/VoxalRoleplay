@@ -64,7 +64,7 @@ public class ResourcePackLoader {
             for (Tuple<String> path : entry.getValue()) {
                 try {
                     InputStreamReader stream = new InputStreamReader(zipFile.getInputStream(zipFile.getEntry(path.getTwo())));
-                    registry.add(path.getOne(), gson.fromJson(stream, (Type) aClass));
+                    registry.register(path.getOne(), gson.fromJson(stream, (Type) aClass));
                     stream.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);

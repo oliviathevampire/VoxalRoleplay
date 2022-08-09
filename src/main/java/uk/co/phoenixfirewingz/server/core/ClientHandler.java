@@ -1,5 +1,6 @@
 package uk.co.phoenixfirewingz.server.core;
 
+import uk.co.phoenixfirewingz.share.game.Registries;
 import uk.co.phoenixfirewingz.share.network.NetPackage;
 import uk.co.phoenixfirewingz.share.network.PackageSubType;
 import uk.co.phoenixfirewingz.share.network.packages.GiveRegistry;
@@ -44,15 +45,15 @@ public class ClientHandler implements Runnable{
                     case GET: {
                         if (((NetPackage) pack).sub_type == PackageSubType.BLOCK) {
                             GameServer.getLOGGER().info(client.toString() + ": requested block reg");
-                            write_client.writeObject(new GiveRegistry<>(server.blockRegistry, PackageSubType.BLOCK));
+                            write_client.writeObject(new GiveRegistry<>(Registries.BLOCK, PackageSubType.BLOCK));
                         }
                         if (((NetPackage) pack).sub_type == PackageSubType.ITEM) {
                             GameServer.getLOGGER().info(client.toString() + ": requested item reg");
-                            write_client.writeObject(new GiveRegistry<>(server.itemRegistry, PackageSubType.ITEM));
+                            write_client.writeObject(new GiveRegistry<>(Registries.ITEM, PackageSubType.ITEM));
                         }
                         if (((NetPackage) pack).sub_type == PackageSubType.ENTITY) {
                             GameServer.getLOGGER().info(client.toString() + ": requested entity reg");
-                            write_client.writeObject(new GiveRegistry<>(server.entityRegistry, PackageSubType.ENTITY));
+                            write_client.writeObject(new GiveRegistry<>(Registries.ENTITY, PackageSubType.ENTITY));
                         }
                     }
                     default: break;
