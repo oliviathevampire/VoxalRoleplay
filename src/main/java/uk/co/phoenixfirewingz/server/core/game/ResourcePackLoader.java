@@ -130,6 +130,5 @@ public class ResourcePackLoader {
         }
     }
 
-    private record LoadEntry<T extends BaseContent>(Entry entry, Class<T> aClass, Registry<T> registry) {
-    }
+    private record LoadEntry<T extends BaseContent>(Entry entry, Class<T> aClass, Registry<T> registry) {}
 }

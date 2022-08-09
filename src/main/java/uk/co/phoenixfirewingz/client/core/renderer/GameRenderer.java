@@ -1,25 +1,22 @@
 package uk.co.phoenixfirewingz.client.core.renderer;
 
-import org.lwjgl.glfw.GLFW;
-
 public class GameRenderer extends Thread {
-    Window window;
-    GameGL gl = new GameGL();
-    public GameRenderer()
-    {
-        window = new Window(1280,720);
-        gl.init(window);
-    }
+	Window window;
+	GameGL gl = new GameGL();
 
-    @Override
-    public void run() {
-        while (!window.shouldClose())
-        {
-            window.update();
-        }
-    }
+	public GameRenderer() {
+		window = new Window(1280, 720);
+		gl.init(window);
+	}
 
-    public Window getWindow() {
-        return window;
-    }
+	@Override
+	public void run() {
+		while (!window.shouldClose()) {
+			window.update();
+		}
+	}
+
+	public Window getWindow() {
+		return window;
+	}
 }
