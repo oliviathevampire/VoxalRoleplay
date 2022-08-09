@@ -1,20 +1,18 @@
 package uk.co.phoenixfirewingz.client.core.Net;
 
 import uk.co.phoenixfirewingz.client.core.Main;
-import uk.co.phoenixfirewingz.server.core.GameServer;
-import uk.co.phoenixfirewingz.share.network.NetPackage;
-import uk.co.phoenixfirewingz.share.network.packages.GiveBlockRegistry;
-import uk.co.phoenixfirewingz.share.network.packages.RequestBlockRegistry;
+import uk.co.phoenixfirewingz.share.game.Block;
+import uk.co.phoenixfirewingz.share.game.Entity;
+import uk.co.phoenixfirewingz.share.game.Item;
+import uk.co.phoenixfirewingz.share.network.PackageSubType;
+import uk.co.phoenixfirewingz.share.network.packages.GiveRegistry;
+import uk.co.phoenixfirewingz.share.network.packages.RequestRegistry;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import static uk.co.phoenixfirewingz.share.network.PackageType.PONG;
-
-public class Client implements Runnable
-{
+public class Client implements Runnable {
     private Socket client;
     private ObjectInputStream server_read;
     private ObjectOutputStream server_write;
@@ -30,13 +28,19 @@ public class Client implements Runnable
             return;
         }
         try {
-            server_write.writeObject(new RequestBlockRegistry());
+            server_write.writeObject(new RequestRegistry(PackageSubType.BLOCK));
+            GiveRegistry<Block> blockGiveRegistry = (GiveRegistry<Block>) server_read.readObject();
+            Main.setBlockRegistry(blockGiveRegistry.registry);
 
-            GiveBlockRegistry registry = (GiveBlockRegistry) server_read.readObject();
-            Main.setBlockRegistry(registry.blockRegistry);
+            server_write.writeObject(new RequestRegistry(PackageSubType.ITEM));
+            GiveRegistry<Item> itemGiveRegistry = (GiveRegistry<Item>) server_read.readObject();
+            Main.setItemRegistry(itemGiveRegistry.registry);
+
+            server_write.writeObject(new RequestRegistry(PackageSubType.ENTITY));
+            GiveRegistry<Entity> entityGiveRegistry = (GiveRegistry<Entity>) server_read.readObject();
+            Main.setEntityRegistry(entityGiveRegistry.registry);
         } catch (Exception e) {
             Main.getLogger().error(e.getMessage());
-            return;
         }
 
     }

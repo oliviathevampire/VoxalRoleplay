@@ -5,11 +5,11 @@ import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.apache.log4j.BasicConfigurator;
-import uk.co.phoenixfirewingz.share.game.BlockRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.co.phoenixfirewingz.server.core.game.ResourcePackLoader;
 import uk.co.phoenixfirewingz.server.core.game.World;
+import uk.co.phoenixfirewingz.share.game.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -17,16 +17,13 @@ import java.net.Socket;
 
 import static uk.co.phoenixfirewingz.share.util.Linker.link;
 
-public class GameServer
-{
+public class GameServer {
     ServerSocket socket;
     static Logger LOGGER = LoggerFactory.getLogger("VoxelRoleplayServer");
-    public BlockRegistry block_registry = new BlockRegistry();
     public static Thread world;
 
     //TODO: make server controllable from args
-    GameServer(String[] args)
-    {
+    GameServer(String[] args) {
         link();
         ArgumentParser parser = ArgumentParsers.newFor("VoxelRoleplayGameServer").build().defaultHelp(true).description("Game Server Args");
         parser.addArgument("-a", "--AssetsPack").setDefault((Object) null).help("Location of Game Assets").required(true);
@@ -40,27 +37,24 @@ public class GameServer
             System.exit(-1);
         }
         ResourcePackLoader.load(ns.getString("AssetsPack"),this);
+
         try {
             world = new World("newWorld");
             socket = new ServerSocket(25567);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             LOGGER.trace(e.getMessage());
             System.gc();
             System.exit(-1);
         }
     }
 
-    public boolean isStopped()
-    {
+    public boolean isStopped() {
         return socket.isClosed();
     }
-    public void run()
-    {
+
+    public void run() {
         world.start();
-        while (! isStopped())
-        {
+        while (!isStopped()) {
             Socket client_socket = null;
             try {
                 client_socket = socket.accept();
@@ -75,8 +69,7 @@ public class GameServer
         }
     }
 
-    public void close()
-    {
+    public void close() {
         try {
             socket.close();
         } catch (IOException e) {
@@ -84,9 +77,8 @@ public class GameServer
         }
     }
 
-    public void clearReg()
-    {
-        block_registry.clear();
+    public void clearReg() {
+        Registries.REGISTRIES.getEntries().forEach(Registry::clear);
     }
 
     public static Logger getLOGGER() {

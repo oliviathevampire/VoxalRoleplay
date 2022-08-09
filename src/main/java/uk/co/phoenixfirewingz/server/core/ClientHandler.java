@@ -1,9 +1,13 @@
 package uk.co.phoenixfirewingz.server.core;
 
+import uk.co.phoenixfirewingz.share.game.Registries;
 import uk.co.phoenixfirewingz.share.network.NetPackage;
-import uk.co.phoenixfirewingz.share.network.packages.GiveBlockRegistry;
+import uk.co.phoenixfirewingz.share.network.PackageSubType;
+import uk.co.phoenixfirewingz.share.network.packages.GiveRegistry;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import static java.lang.Thread.sleep;
@@ -30,30 +34,29 @@ public class ClientHandler implements Runnable{
             return;
         }
 
-        while (client.isConnected())
-        {
+        while (client.isConnected()) {
             try {
                 sleep(2);
                 Object pack =  read_client.readObject();
-                switch (((NetPackage)pack).type)
-                {
+                switch (((NetPackage)pack).type) {
                     case PING:
                         write_client.writeObject(new NetPackage(PONG));
                         break;
-                    case GET:
-                    {
-                        switch (((NetPackage)pack).sub_type)
-                        {
-                            case BLOCK:{
-                                GameServer.getLOGGER().info(client.toString() + ": requested block reg");
-                                write_client.writeObject(new GiveBlockRegistry(server.block_registry));
-                                break;
-                            }
+                    case GET: {
+                        if (((NetPackage) pack).sub_type == PackageSubType.BLOCK) {
+                            GameServer.getLOGGER().info(client.toString() + ": requested block reg");
+                            write_client.writeObject(new GiveRegistry<>(Registries.BLOCK, PackageSubType.BLOCK));
+                        }
+                        if (((NetPackage) pack).sub_type == PackageSubType.ITEM) {
+                            GameServer.getLOGGER().info(client.toString() + ": requested item reg");
+                            write_client.writeObject(new GiveRegistry<>(Registries.ITEM, PackageSubType.ITEM));
+                        }
+                        if (((NetPackage) pack).sub_type == PackageSubType.ENTITY) {
+                            GameServer.getLOGGER().info(client.toString() + ": requested entity reg");
+                            write_client.writeObject(new GiveRegistry<>(Registries.ENTITY, PackageSubType.ENTITY));
                         }
                     }
-                    default: {
-                        break;
-                    }
+                    default: break;
                 }
             } catch (Exception e) {
                 GameServer.getLOGGER().trace(e.getMessage());
