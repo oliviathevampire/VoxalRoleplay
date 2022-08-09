@@ -50,6 +50,10 @@ public class ClientHandler implements Runnable{
                             GameServer.getLOGGER().info(client.toString() + ": requested item reg");
                             write_client.writeObject(new GiveRegistry<>(server.itemRegistry, PackageSubType.ITEM));
                         }
+                        if (((NetPackage) pack).sub_type == PackageSubType.ENTITY) {
+                            GameServer.getLOGGER().info(client.toString() + ": requested entity reg");
+                            write_client.writeObject(new GiveRegistry<>(server.entityRegistry, PackageSubType.ENTITY));
+                        }
                     }
                     default: break;
                 }
